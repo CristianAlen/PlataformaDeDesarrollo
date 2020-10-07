@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TPTarea
+namespace ConsoleApp1
 {
-    public class Usuarios
+    public class TipoTarea
     {
-        public string Usuario { get; set; }
-        public string Clave { get; set; }
+        public int Id { get; set; }
 
+        public string Nombre { get; set; }
     }
 }
