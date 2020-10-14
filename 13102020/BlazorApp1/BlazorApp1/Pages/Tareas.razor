@@ -1,0 +1,41 @@
+﻿@page "/AddTareas"
+@using BlazorApp1.Data
+
+@inject GetTarea Service
+
+<h3>Tareas</h3>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Titulo</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+            <tr>
+                <td>@forecast.Titulo</td>
+                <td>@forecast.Estado</td>
+                
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private TareaModel[] forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = Service.GetTareasAsync();
+    }
+}
