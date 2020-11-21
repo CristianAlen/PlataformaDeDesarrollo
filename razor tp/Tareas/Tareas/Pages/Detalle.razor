@@ -1,0 +1,58 @@
+﻿@page "/detalle/detalles"
+
+@using Tareas.Data;
+
+@inject DetalleService service
+@inject NavigationManager navigation
+@inject IJSRuntime JsRuntime
+
+<h3>Usuarios</h3>
+
+@if (detalle == null)
+{
+    <p>Loading...</p>
+}
+
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in detalle)
+            {
+                <tr>
+                    <td>@item.</td>
+                    <td><button class="btn" @onclick="()=>Editar(item.IdDetalles)">Editar</button> <button class="btn" @onclick="()=>Borrar(item.IdDetalles)">Borrar</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Tareas.Data.Detalle> detalle;
+
+    protected override async Task OnInitializedAsync()
+    {
+        detalle = await service.GetAllDetalle();
+    }
+
+    protected void Editar(int id)
+    {
+        navigation.NavigateTo("recursos/editardetalle/" + id);
+    }
+
+    async Task Borrar(int id)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Desea elimiar el usuario?");
+        if (confirmed)
+        {
+            await service.Remove(id);
+            detalle = await service.GetAllDetalle();
+        }
+    }
+}

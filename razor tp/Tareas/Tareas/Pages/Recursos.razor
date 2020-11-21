@@ -1,0 +1,58 @@
+﻿@page "/recursos/recursos"
+
+@using Tareas.Data;
+
+@inject RecursoService service
+@inject NavigationManager navigation
+@inject IJSRuntime JsRuntime
+
+<h3>Usuarios</h3>
+
+@if (recurso == null)
+{
+    <p>Loading...</p>
+}
+
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in recurso)
+            {
+                <tr>
+                    <td>@item.</td>
+                    <td><button class="btn" @onclick="()=>Editar(item.IdRecursos)">Editar</button> <button class="btn" @onclick="()=>Borrar(item.IdRecursos)">Borrar</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Tareas.Data.Recurso> recurso;
+
+    protected override async Task OnInitializedAsync()
+    {
+        recurso = await service.GetAllRecurso();
+    }
+
+    protected void Editar(int id)
+    {
+        navigation.NavigateTo("recursos/editarrecurso/" + id);
+    }
+
+    async Task Borrar(int id)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Desea elimiar el usuario?");
+        if (confirmed)
+        {
+            await service.Remove(id);
+            recurso = await service.GetAllRecurso();
+        }
+    }
+}
