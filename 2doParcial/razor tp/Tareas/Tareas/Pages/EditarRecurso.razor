@@ -1,0 +1,40 @@
+﻿@page "/recursos/editarrecurso/{id:int}"
+
+@using Tareas.Data
+@inject RecursoService service
+@inject NavigationManager navigation
+
+<EditForm Model="@Modelo" OnValidSubmit="@Guardar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText @bind-Value="Modelo.Nombre" />
+
+    <button type="submit">Guardar</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public Recurso Modelo { get; set; } = new Recurso();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id > 0)
+        {
+            Modelo = await service.Get(Id);
+        }
+        else
+        {
+            Modelo = new Recurso();
+        }
+    }
+
+
+    private async void Guardar()
+    {
+        await service.Save(Modelo);
+        navigation.NavigateTo("recursos/recursos");
+    }
+}

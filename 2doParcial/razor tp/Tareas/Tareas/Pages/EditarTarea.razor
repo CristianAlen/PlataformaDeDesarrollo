@@ -1,0 +1,41 @@
+﻿@page "/tarea/editartarea/{id:int}"
+
+@using Tareas.Data
+@inject TareaService service
+@inject NavigationManager navigation
+
+    <EditForm Model="@Modelo" OnValidSubmit="@Guardar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <InputText @bind-Value="Modelo.Titulo" />
+        <InputText @bind-Value="Modelo.Vencimiento" />
+
+        <button type="submit">Guardar</button>
+    </EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public Tareas.Data.Tarea Modelo { get; set; } = new Tareas.Data.Tarea();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id > 0)
+        {
+            Modelo = await service.Get(Id);
+        }
+        else
+        {
+            Modelo = new Tareas.Data.Tarea();
+        }
+    }
+
+
+    private async void Guardar()
+    {
+        await service.Save(Modelo);
+        navigation.NavigateTo("tarea/tareas");
+    }
+}

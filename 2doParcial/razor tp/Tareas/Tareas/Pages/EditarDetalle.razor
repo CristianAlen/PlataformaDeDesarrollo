@@ -1,0 +1,41 @@
+﻿@page "/detalle/editardetalle/{id:int}"
+
+@using Tareas.Data
+@inject DetalleService service
+@inject NavigationManager navigation
+
+    <EditForm Model="@Modelo" OnValidSubmit="@Guardar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <InputText @bind-Value="Modelo.Fecha" />
+        <InputText @bind-Value="Modelo.Tiempo" />
+
+        <button type="submit">Guardar</button>
+    </EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public Tareas.Data.Detalle Modelo { get; set; } = new Tareas.Data.Detalle();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id > 0)
+        {
+            Modelo = await service.Get(Id);
+        }
+        else
+        {
+            Modelo = new Tareas.Data.Detalle();
+        }
+    }
+
+
+    private async void Guardar()
+    {
+        await service.Save(Modelo);
+        navigation.NavigateTo("detalle/detalles");
+    }
+}
