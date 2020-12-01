@@ -1,0 +1,65 @@
+﻿@page "/tarea/editartarea/{id:int}"
+
+@using Tareas.Data
+@inject TareaService service
+@inject NavigationManager navigation
+
+    <EditForm Model="@Modelo" OnValidSubmit="@Guardar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        Titulo:
+        <InputText @bind-Value="Modelo.Titulo" />
+        <br />
+
+        Vencimiento:
+        <InputText @bind-Value="Modelo.Vencimiento" />
+        <br />
+        Estimacion:
+        <InputText @bind-Value="Modelo.Estimacion" />
+        <br />
+        <div class="form-group row">
+            <InputSelect @bind-Value="DetalleId">
+                <option value="0">Elija un rol</option>
+                @foreach (var item in detalles)
+                {
+                    <option value="@item.IdDetalles">@item.Recurso.Nombre</option>
+                }
+            </InputSelect>
+        </div>
+        <br />
+        @*Estado:
+        <InputText @bind-Value="Modelo.Estado" />*@
+        <button type="submit">Guardar</button>
+    </EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public Tareas.Data.Tarea Modelo { get; set; } = new Tareas.Data.Tarea();
+
+    public string DetalleId { get; set; }
+
+    private List<Tareas.Data.Detalle> detalles;
+
+    protected override async Task OnInitializedAsync()
+
+    {
+        if (Id > 0)
+        {
+            Modelo = await service.Get(Id);
+        }
+        else
+        {
+            Modelo = new Tareas.Data.Tarea();
+        }
+    }
+
+
+    private async void Guardar()
+    {
+        await service.Save(Modelo);
+        navigation.NavigateTo("tarea/tareas");
+    }
+}
