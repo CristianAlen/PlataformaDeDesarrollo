@@ -22,6 +22,7 @@ else
                 <th>Titulo</th>
                 <th>Vencimiento</th>
                 <th>Estimacion</th>
+                @*<th>Recurso</th>*@
                 <th>Estado</th>
                 <th>Accion</th>
             </tr>
@@ -33,8 +34,9 @@ else
                 <td>@item.Titulo</td>
                 <td>@item.Vencimiento</td>
                 <td>@item.Estimacion</td>
+                @*<td>@item.Responsable.Nombre</td>*@
                 <td>@item.Estado</td>
-                <td><button class="btn" @onclick="()=>Editar(item.IdTareas)">Editar</button> <button class="btn" @onclick="()=>Borrar(item.IdTareas)">Borrar</button></td>
+                <td><button class="btn" @onclick="()=>Editar(item.IdTareas)">Editar</button> <button class="btn" @onclick="()=>Borrar(item.IdTareas)">Borrar</button> @*<button class="btn" @onclick="()=>EditarRecurso(item.Responsable.IdRecursos)">Detalles</button>*@</td>
             </tr>
             }
         </tbody>
@@ -50,6 +52,11 @@ else
     }
 
     protected void Editar(int id)
+    {
+        navigation.NavigateTo("tarea/editartarea/" + id);
+    }
+
+    protected void EditarRecurso(int id)
     {
         navigation.NavigateTo("tarea/editartarea/" + id);
     }

@@ -1,35 +1,37 @@
 ﻿@page "/tarea/editartarea/{id:int}"
 
 @using Tareas.Data
+
 @inject TareaService service
 @inject NavigationManager navigation
 
     <EditForm Model="@Modelo" OnValidSubmit="@Guardar">
         <DataAnnotationsValidator />
         <ValidationSummary />
-
         Titulo:
         <InputText @bind-Value="Modelo.Titulo" />
         <br />
-
         Vencimiento:
         <InputText @bind-Value="Modelo.Vencimiento" />
         <br />
         Estimacion:
         <InputText @bind-Value="Modelo.Estimacion" />
         <br />
+        Recurso:
         <div class="form-group row">
-            <InputSelect @bind-Value="DetalleId">
-                <option value="0">Elija un rol</option>
-                @foreach (var item in detalles)
+            <InputSelect @bind-Value="IdRecursos">
+                <option value="0">Elija un Detalle</option>
+                @foreach (var item in recurso)
                 {
-                    <option value="@item.IdDetalles">@item.Recurso.Nombre</option>
+                    <option value="@item.IdRecursos">@item.Nombre</option>
                 }
             </InputSelect>
         </div>
         <br />
         @*Estado:
         <InputText @bind-Value="Modelo.Estado" />*@
+        <br />
+
         <button type="submit">Guardar</button>
     </EditForm>
 
@@ -39,9 +41,9 @@
 
     public Tareas.Data.Tarea Modelo { get; set; } = new Tareas.Data.Tarea();
 
-    public string DetalleId { get; set; }
+    public string IdRecursos { get; set; }
 
-    private List<Tareas.Data.Detalle> detalles;
+    public List<Tareas.Data.Recurso> recurso { get; set; } = new List<Recurso>();
 
     protected override async Task OnInitializedAsync()
 
@@ -54,6 +56,7 @@
         {
             Modelo = new Tareas.Data.Tarea();
         }
+
     }
 
 

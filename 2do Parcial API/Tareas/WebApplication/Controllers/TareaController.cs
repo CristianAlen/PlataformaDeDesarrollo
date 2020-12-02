@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ClassLibrary.Entidades;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApplication.Data;
 
 namespace WebApplication.Controllers
@@ -27,15 +28,29 @@ namespace WebApplication.Controllers
         [HttpPost]
         public Tarea Post(Tarea tra)
         {
+            var local = _context.Tarea.Local.FirstOrDefault(e => e.IdTareas.Equals(tra.IdTareas));
+
+            if (local != null)
+            {
+                _context.Entry(local).State = EntityState.Detached;
+            }
             if (tra.IdTareas == 0)
             {
-                _context.Tarea.Add(tra);
+                _context.Entry(tra).State = EntityState.Detached;
             }
             else
             {
-                _context.Tarea.Attach(tra);
-                _context.Tarea.Update(tra);
+                _context.Entry(tra).State = EntityState.Modified;
             }
+            //if (tra.IdTareas == 0)
+            //{
+            //    _context.Tarea.Add(tra);
+            //}
+            //else
+            //{
+            //    _context.Tarea.Attach(tra);
+            //    _context.Tarea.Update(tra);
+            //}
             _context.SaveChanges();
 
             return tra;

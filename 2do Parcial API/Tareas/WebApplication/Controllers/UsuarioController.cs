@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ClassLibrary.Entidades;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApplication.Data;
 
 namespace WebApplication.Controllers
@@ -27,15 +28,29 @@ namespace WebApplication.Controllers
         [HttpPost]
         public Usuario Post(Usuario usr)
         {
+            var local = _context.Usuario.Local.FirstOrDefault(e => e.IdUsuario.Equals(usr.IdUsuario));
+
+            if (local != null)
+            {
+                _context.Entry(local).State = EntityState.Detached;
+            }
             if(usr.IdUsuario == 0)
             {
-                _context.Usuario.Add(usr);
+                _context.Entry(usr).State = EntityState.Detached;
             }
             else
             {
-                _context.Usuario.Attach(usr);
-                _context.Usuario.Update(usr);
+                _context.Entry(usr).State = EntityState.Modified;
             }
+            //if(usr.IdUsuario == 0)
+            //{
+            //    _context.Usuario.Add(usr);
+            //}
+            //else
+            //{
+            //    _context.Usuario.Attach(usr);
+            //    _context.Usuario.Update(usr);
+            //}
             _context.SaveChanges();
 
             return usr;
